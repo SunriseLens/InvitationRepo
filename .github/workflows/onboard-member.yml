@@ -1,0 +1,22 @@
+name: Welcome New Member
+
+on:
+  repository_dispatch:
+    types: [new-org-member]
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create Welcome Issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+        run: |
+          curl -X POST https://api.github.com/repos/SunriseLens/Onboardingrepo/issues \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -d '{
+              "title": " Welcome @${{ github.event.client_payload.username }}!",
+              "body": "Hi @${{ github.event.client_payload.username }}, welcome to SunriseLens! "
+            }'
